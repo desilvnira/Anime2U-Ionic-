@@ -6,6 +6,7 @@ import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angula
 import { Router } from '@angular/router';
 import { Events } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth'
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-search',
@@ -20,6 +21,7 @@ export class SearchPage implements OnInit {
   completed: AngularFireList<any>;
   yetToWatch: AngularFireList<any>;
   top10: AngularFireList<any>;
+  top10Limit: any
   
   username: any
 
@@ -34,6 +36,7 @@ export class SearchPage implements OnInit {
     public events: Events,
     public db:
     AngularFireDatabase,
+    public alert: AlertController,
     ) {
 
 
@@ -82,7 +85,7 @@ export class SearchPage implements OnInit {
     
   }
 
-  addToList(ev:any, anime:any){
+  async addToList(ev:any, anime:any){
     
   if(ev.detail.value === "watching"){
     console.log("Added: " + anime.title + " to WATCHING");
@@ -116,6 +119,18 @@ export class SearchPage implements OnInit {
 
   if(ev.detail.value === "top10"){
     console.log("Added: " + anime.title + " to TOP10");
+    const ok = this.db.list(`users/${SearchPage.prototype.username}/top10`, ref => ref.limitToFirst(100).orderByKey())
+    ok.valueChanges().subscribe(data => (SearchPage.prototype.top10Limit = data.length))
+    if(this.top10Limit >= 10){
+      var message: string
+      message = "Top 10 limit reached: Please remove from Top 10 to continue"
+      const al = await this.alert.create({
+        message,
+        buttons: ["Ok"]
+      })     
+      await al.present()
+      return;
+    }
     // this.top10.push(anime)
     this.watching = this.db.list(`users/${this.username}/top10`)
     this.watching.push({anime: anime})
