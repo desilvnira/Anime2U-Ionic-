@@ -25,13 +25,18 @@
   <ion-content>
           <div [ngSwitch]="chooser">
               <ion-list *ngSwitchCase="'listView'">
-                  <ion-item *ngFor="let anime of top10; let i = index" [attr.data-index]="i">
+                <ion-list *ngFor="let anime of top10; let i = index" [attr.data-index]="i">
+                  <ion-item>
+                      <ion-label>{{i+1}}.</ion-label>
+                  </ion-item>
+                  <ion-item>
                       <ion-label>{{anime.anime.title}}</ion-label>
                       <ion-select placeholder="" (ionChange)="options($event, anime, i)">
                         <ion-select-option value="remove">Remove</ion-select-option>
                       </ion-select>
                     </ion-item>
               </ion-list>
+            </ion-list>
           </div>
 
           <div [ngSwitch]="chooser">
