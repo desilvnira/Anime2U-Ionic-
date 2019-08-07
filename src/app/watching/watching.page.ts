@@ -115,7 +115,7 @@ export class WatchingPage implements OnInit {
 
     console.log(anime.anime.episodes)
     console.log(ev.target.value)
-    if(ev.target.value > anime.anime.episodes){
+    if(ev.target.value > anime.anime.episodes || ev.target.value <= 0){
       var message: string
       message = "Episode number out of bounds"
       const al = await this.alert.create({
