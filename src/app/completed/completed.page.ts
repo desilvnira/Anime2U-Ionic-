@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth'
 import { Observable, Subject } from 'rxjs';
+import { AlertController } from '@ionic/angular';
+
 
 
 @Component({
@@ -17,14 +19,16 @@ export class CompletedPage implements OnInit {
   completed: any
   completedOptions: any
   username: any
+  top10Limit: any
 
   itemRef: AngularFireObject<any>;
   item: Observable<any>;
 
   constructor(public router: Router,
     public afAuth: AngularFireAuth,
-    public db:
-    AngularFireDatabase) {
+    public db: AngularFireDatabase,
+    public alert: AlertController
+    ){
 
       this.itemRef = db.object('users');
       this.item = this.itemRef.valueChanges();
@@ -62,7 +66,7 @@ export class CompletedPage implements OnInit {
     ok2.snapshotChanges().subscribe(data => (this.completedOptions = data))
   }
 
-  options(ev:any, anime:any, pos:any){
+  async options(ev:any, anime:any, pos:any){
 
     if(ev.detail.value === "remove"){      
       this.db.list(`users/${this.username}/completed/${this.completedOptions[pos].key}`).remove()
@@ -82,7 +86,20 @@ export class CompletedPage implements OnInit {
       this.db.list(`users/${this.username}/completed/${this.completedOptions[pos].key}`).remove()
     }
 
-    if(ev.detail.value === "top10"){      
+    if(ev.detail.value === "top10"){ 
+      const ok = this.db.list(`users/${CompletedPage.prototype.username}/top10`, ref => ref.limitToFirst(100).orderByKey())
+      ok.valueChanges().subscribe(data => (CompletedPage.prototype.top10Limit = data.length))
+      // Makes sure that you cannot add over 10 animes to the top 10
+      if(this.top10Limit >= 10){
+        var message: string
+        message = "Top 10 limit reached: Please remove from Top 10 to continue"
+        const al = await this.alert.create({
+          message,
+          buttons: ["Ok"]
+        })     
+        await al.present()
+        return; 
+      }      
       this.db.list(`users/${this.username}/top10`).push({
         anime: anime.anime
       })      

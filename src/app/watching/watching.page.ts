@@ -21,6 +21,7 @@ export class WatchingPage implements OnInit {
   username: any
   eps: string = ""
   nextEp: string = ""
+  top10Limit: any
 
   itemRef: AngularFireObject<any>;
   item: Observable<any>;
@@ -69,7 +70,7 @@ export class WatchingPage implements OnInit {
 
   }
 
-  options(ev:any, anime:any, pos:any){
+ async options(ev:any, anime:any, pos:any){
 
     if(ev.detail.value === "remove"){      
       this.db.list(`users/${this.username}/watching/${this.watchingOptions[pos].key}`).remove()
@@ -89,7 +90,20 @@ export class WatchingPage implements OnInit {
       this.db.list(`users/${this.username}/watching/${this.watchingOptions[pos].key}`).remove()
     }
 
-    if(ev.detail.value === "top10"){      
+    if(ev.detail.value === "top10"){
+      const ok = this.db.list(`users/${WatchingPage.prototype.username}/top10`, ref => ref.limitToFirst(100).orderByKey())
+      ok.valueChanges().subscribe(data => (WatchingPage.prototype.top10Limit = data.length))
+      // Makes sure that you cannot add over 10 animes to the top 10
+      if(this.top10Limit === 10){
+        var message: string
+        message = "Top 10 limit reached: Please remove from Top 10 to continue"
+        const al = await this.alert.create({
+          message,
+          buttons: ["Ok"]
+        })     
+        await al.present()
+        return; 
+      }     
       this.db.list(`users/${this.username}/top10`).push({
         anime: anime.anime
       })      
