@@ -1,0 +1,23 @@
+<ion-content padding center text-center>
+  <ion-title>Anime2U Registration</ion-title>
+  <ion-list>
+    <ion-item>
+      <ion-input placeholder="Username" [(ngModel)]="username"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Password" type="password" [(ngModel)]="password"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Confirm Password" type="password" [(ngModel)]="cpassword"></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-input placeholder="Favourite Anime" [(ngModel)]="favAnime"></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-input placeholder="Profile Pic URL" [(ngModel)]="picURL"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button fill="solid" expand="block" color="light" (click)="doRegister()">Register</ion-button>
+  
+</ion-content>

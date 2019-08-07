@@ -1,0 +1,63 @@
+<ion-header> 
+  <ion-toolbar>
+    <ion-title>Search</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+    <ion-list>
+        <ion-card *ngFor="let anime of data">
+            <img src= {{anime.image_url}}/>
+            <ion-card-content>
+              <ion-card-title>
+                  {{anime.title}}
+                </ion-card-title>
+              <p>
+                  {{anime.synopsis}}
+              </p>
+              <p>
+                  Episodes: {{anime.episodes}}
+               </p>
+              <p>
+                 Score: {{anime.score}}
+              </p>
+              <p>
+                  Type: {{anime.type}}
+              </p>
+              <ion-item>
+                  <ion-label>Add to list</ion-label>
+                  <ion-select placeholder="Select One" (ionChange)="addToList($event, anime)">
+                    <ion-select-option value="watching">Watching</ion-select-option>
+                    <ion-select-option value="completed">Completed</ion-select-option>
+                    <ion-select-option value="yetToWatch">Yet to Watch</ion-select-option>
+                    <ion-select-option value="top10">Top 10</ion-select-option>
+                    <ion-select-option value="testing">Testing</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              
+            </ion-card-content>
+          </ion-card>
+    </ion-list>
+  
+
+  <!-- The reason this does not work is because the data list of(anime) is only populated once
+  doSearch() is pressed. -->
+  <!-- *ngFor="let anime of temp" -->
+  <!-- <ion-card>
+
+      <ion-card-header>
+        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+        <ion-card-title>Card Title</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content>
+        Keep close to Nature's heart... and break clear away, once in awhile,
+        and climb a mountain or spend a week in the woods. Wash your spirit clean.
+      </ion-card-content>
+    </ion-card> -->
+
+      
+     
+  
+</ion-content>

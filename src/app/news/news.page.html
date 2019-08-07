@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>News</ion-title>
+    <ion-select id=selectOne placeholder="Upcoming" (ionChange)="changer($event)">
+        <ion-select-option>Upcoming</ion-select-option>
+        <ion-select-option>Airing</ion-select-option>
+        <ion-select-option>Most Popular</ion-select-option>
+      </ion-select>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content>
+
+      
+        <ion-card *ngFor="let anime of data">
+            <img src={{anime.image_url}}/>
+            <ion-card-content>
+              <ion-card-title>
+                  {{anime.title}}
+                </ion-card-title>
+                <p>
+                    {{anime.start_date}}
+                </p>
+                <p>
+                    Episodes: {{anime.episodes}}
+                 </p>
+                <p>
+                   Score: {{anime.score}}
+                </p>
+                <p>
+                    People watching: {{anime.members}}
+                </p>
+                <p>
+                    Type: {{anime.type}}
+                </p>
+            </ion-card-content>
+          </ion-card>
+
+
+
+  
+
+    
+
+</ion-content>

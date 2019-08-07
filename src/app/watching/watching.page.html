@@ -1,0 +1,81 @@
+<ion-header>
+
+      <ion-title>
+        Watching
+      </ion-title>
+
+  
+    <ion-toolbar no-border-top>
+      <ion-icon name="arrow-round-back" slot=start (click)="goBack()"></ion-icon>
+      <ion-segment [(ngModel)]="chooser">
+        <ion-segment-button value="listView">
+          List View
+        </ion-segment-button>
+        <ion-segment-button value="cardView">
+          Card View
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+  </ion-header>
+
+
+
+<ion-content>
+    <ion-content>
+            <div [ngSwitch]="chooser">
+                <ion-list *ngSwitchCase="'listView'">
+                    <ion-list *ngFor="let anime of watching; let i = index" [attr.data-index]="i">
+                      <ion-item>
+                          <ion-label color="primary">{{anime.anime.title}}</ion-label>
+                          <ion-select placeholder="" (ionChange)="options($event, anime, i)">
+                            <ion-select-option value="remove">Remove</ion-select-option>
+                            <ion-select-option value="completed">Completed</ion-select-option>
+                            <ion-select-option value="yetToWatch">Yet to Watch</ion-select-option>
+                            <ion-select-option value="top10">Top 10</ion-select-option>
+                          </ion-select>
+                      </ion-item>                      
+                      <ion-item>
+                          <ion-label color="tertiary">Enter epsiode number:</ion-label>
+                          <ion-input (keyup.enter)="getEp($event, i, anime)"></ion-input>
+                          <ion-text color="tertiary">
+                            {{anime.currentEpisode}}/{{anime.anime.episodes}}
+                          </ion-text>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-label color="tertiary">Next up:</ion-label>
+                            <p>{{anime.nextEpisode}}</p>
+                          </ion-item>
+                </ion-list>
+              </ion-list>
+            </div>
+
+            <div [ngSwitch]="chooser">
+                <ion-list *ngSwitchCase="'cardView'">
+                    <ion-card *ngFor="let anime of watching">
+            <img src= {{anime.anime.image_url}}/>
+            <ion-card-content>
+              <ion-card-title>
+                  {{anime.anime.title}}
+                </ion-card-title>
+              <p>
+                  {{anime.anime.synopsis}}
+              </p>
+              <p>
+                  Episodes: {{anime.anime.episodes}}
+               </p>
+              <p>
+                 Score: {{anime.anime.score}}
+              </p>
+              <p>
+                  Type: {{anime.anime.type}}
+              </p>
+              
+            </ion-card-content>
+          </ion-card>
+                </ion-list>
+            </div>
+
+      </ion-content>
+
+</ion-content>

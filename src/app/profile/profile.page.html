@@ -1,0 +1,62 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>Profile</ion-title>
+      <ion-icon name="exit" slot=end (click)="logout()"></ion-icon>
+    </ion-toolbar>
+    
+  </ion-header>
+<ion-content class="card-background-page">
+    <br>
+
+     <ion-item>
+          <ion-avatar slot="end">
+              <img src={{picURL}}/>
+            </ion-avatar>
+          <ion-label>
+            <h3>{{username}}</h3>
+            <p>Favourite anime: {{favAnime}}</p>
+          </ion-label>
+        </ion-item>
+
+      <br>
+
+      <ion-item>
+          <ion-label>Watching</ion-label>
+          <ion-note slot="end" color="primary">{{noWatching}}</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Completed</ion-label>
+          <ion-note slot="end" color="secondary">{{noCompleted}}</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Still to watch</ion-label>
+          <ion-note slot="end" color="tertiary">{{noStillToWatch}}</ion-note>
+        </ion-item>
+
+    <ion-card (click)="getWatching()">
+      <img src='../../assets/scenic.jpg'/>
+      <div class="card-title">Watching</div>
+      <div class="card-subtitle">Get to it!</div>
+    </ion-card>
+  
+    <ion-card (click)="completed()">
+      <img src='../../assets/scenic1.jpg'/>
+      <div class="card-title">Completed</div>
+      <div class="card-subtitle">Take a look back</div>
+    </ion-card>
+  
+    <ion-card (click)="yetToWatch()">
+      <img src='../../assets/Mystical.jpg'/>
+      <div class="card-title">Still to watch...</div>
+      <div class="card-subtitle">Future endeavours</div>
+    </ion-card>
+  
+    <ion-card (click)="top10()">
+      <img src='../../assets/light.jpg'/>
+      <div class="card-title">Top 10</div>
+      <div class="card-subtitle">Hall of fame</div>
+    </ion-card>
+  
+  </ion-content>
