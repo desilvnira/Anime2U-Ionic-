@@ -85,42 +85,60 @@ export class SearchPage implements OnInit {
     
   }
 
+  /**
+   * Handles the ion select options for where the user is able to 
+   * select the option of which category they want to add to.
+   * The anime they want to add is then added under the chosen category
+   * in the database.
+   * 
+   */
+
   async addToList(ev:any, anime:any){
+
+  /**
+   * Function pushes anime to the watching object in firebase 
+   * for the user authenticated. 
+   */
     
-  if(ev.detail.value === "watching"){
-    console.log("Added: " + anime.title + " to WATCHING");
-    //this.watching.push(anime)
-    
+  if(ev.detail.value === "watching"){ 
     this.watching = this.db.list(`users/${this.username}/watching`)
     this.watching.push({
       anime: anime,
       currentEpisode: 0
     })
-    
-    
-
   }
 
+  /**
+   * Function pushes anime to the completed object in firebase 
+   * for the user authenticated.
+   */
+
   if(ev.detail.value === "completed"){
-    console.log("Added: " + anime.title + " to COMPLETED");
-    // this.completed.push(anime)
     this.watching = this.db.list(`users/${this.username}/completed`)
     this.watching.push({
       anime: anime
     })
   }
 
+  /**
+   * Function pushes anime to the yetToWatch object in firebase 
+   * for the user authenticated.
+   */
+
   if(ev.detail.value === "yetToWatch"){
-    console.log("Added: " + anime.title + " to YET TO WATCH");
-    // this.yetToWatch.push(anime)
     this.watching = this.db.list(`users/${this.username}/yetToWatch`)
     this.watching.push({anime: anime})
   }
 
+  /**
+   * Function pushes anime to the top10 object in firebase 
+   * for the user authenticated.
+   */
+
   if(ev.detail.value === "top10"){
-    console.log("Added: " + anime.title + " to TOP10");
     const ok = this.db.list(`users/${SearchPage.prototype.username}/top10`, ref => ref.limitToFirst(100).orderByKey())
     ok.valueChanges().subscribe(data => (SearchPage.prototype.top10Limit = data.length))
+    // Makes sure that you cannot add over 10 animes to the top 10
     if(this.top10Limit >= 10){
       var message: string
       message = "Top 10 limit reached: Please remove from Top 10 to continue"
@@ -131,12 +149,11 @@ export class SearchPage implements OnInit {
       await al.present()
       return;
     }
-    // this.top10.push(anime)
+    // Pushes anime to the dblist of watching
     this.watching = this.db.list(`users/${this.username}/top10`)
     this.watching.push({anime: anime})
   }
   if(ev.detail.value === "testing"){
-
     this.db.list(`users/${this.username}/watching`)
     .valueChanges()
     .subscribe(res => {
