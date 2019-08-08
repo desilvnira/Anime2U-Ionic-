@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth'
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 
 
