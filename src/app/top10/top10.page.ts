@@ -21,6 +21,14 @@ export class Top10Page implements OnInit {
   itemRef: AngularFireObject<any>;
   item: Observable<any>;
 
+  /**
+   * Uses af auth in order to get currently authenticated user
+   * Uses this user in order to extract data regarding the watching category from database
+   * Have to use a promise due to delay taken to authenticate
+   * @param router 
+   * @param afAuth 
+   * @param db 
+   */
   constructor(public router: Router,
     public afAuth: AngularFireAuth,
     public db:
@@ -40,9 +48,10 @@ export class Top10Page implements OnInit {
         resolve(user.email.split("@niran.com")[0])
       })})
       promise1.then(function (value){
+        // Sets watching field to the list of anime the user is watching
         const ok = db.list(`users/${Top10Page.prototype.username}/top10`, ref => ref.limitToFirst(100).orderByKey())
         ok.valueChanges().subscribe(data => (Top10Page.prototype.top10 = data))
-
+        // Sets watchingOptions field to the list of anime the user is watching but with key outer layer
         const ok2 = db.list(`users/${Top10Page.prototype.username}/top10`, ref => ref.limitToFirst(100).orderByKey())
         ok2.snapshotChanges().subscribe(data => (Top10Page.prototype.top10Options = data))
         
@@ -53,7 +62,12 @@ export class Top10Page implements OnInit {
   ngOnInit() {
   }
 
-
+  /**
+   * Only handles the option of removal from top10 category
+   * @param ev 
+   * @param anime 
+   * @param pos 
+   */
   options(ev:any, anime:any, pos:any){
     if(ev.detail.value === "remove"){      
       console.log(anime)
