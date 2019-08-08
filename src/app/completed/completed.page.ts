@@ -57,7 +57,7 @@ export class CompletedPage implements OnInit {
         // Sets watching field to the list of anime the user is watching
         const ok = db.list(`users/${CompletedPage.prototype.username}/completed`, ref => ref.limitToFirst(100).orderByKey())
         ok.valueChanges().subscribe(data => (CompletedPage.prototype.completed = data))
-         // Sets watchingOptions field to the list of anime the user is watching but with key outer layer
+        // Sets watchingOptions field to the list of anime the user is watching but with key outer layer
         const ok2 = db.list(`users/${CompletedPage.prototype.username}/completed`, ref => ref.limitToFirst(100).orderByKey())
         ok2.snapshotChanges().subscribe(data => (CompletedPage.prototype.completedOptions = data))
         
@@ -68,6 +68,14 @@ export class CompletedPage implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Handles all the options each anime has
+   * Lets each anime be moved to other pages as well as removed from the current page
+   * This is with the exception of the top 10 page where it is only moved and not removed
+   * @param ev 
+   * @param anime 
+   * @param pos 
+   */
   async options(ev:any, anime:any, pos:any){
 
     // Removes the anime from the database and page

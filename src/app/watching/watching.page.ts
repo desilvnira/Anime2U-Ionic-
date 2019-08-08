@@ -69,6 +69,14 @@ export class WatchingPage implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Handles all the options each anime has
+   * Lets each anime be moved to other pages as well as removed from the current page
+   * This is with the exception of the top 10 page where it is only moved and not removed
+   * @param ev 
+   * @param anime 
+   * @param pos 
+   */
  async options(ev:any, anime:any, pos:any){
 
     // Removes anime from database based on key 
