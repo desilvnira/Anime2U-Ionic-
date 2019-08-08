@@ -4,8 +4,6 @@ import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angula
 import { AngularFireAuth } from '@angular/fire/auth'
 import { Observable, Subject } from 'rxjs';
 import { AlertController } from '@ionic/angular';
-import { sanitizeHtml } from '@angular/core/src/sanitization/sanitization';
-
 
 @Component({
   selector: 'app-watching',
@@ -26,6 +24,15 @@ export class WatchingPage implements OnInit {
   itemRef: AngularFireObject<any>;
   item: Observable<any>;
 
+  /**
+   * Uses af auth in order to get currently authenticated user
+   * Uses this user in order to extract data regarding the watching category from database
+   * Have to use a promise due to delay taken to authenticate
+   * @param router 
+   * @param afAuth 
+   * @param db 
+   * @param alert 
+   */
   constructor(public router: Router,
     public afAuth: AngularFireAuth,
     public db: AngularFireDatabase,
@@ -47,9 +54,10 @@ export class WatchingPage implements OnInit {
         
       })})
       promise1.then(function (value){
+        // Sets watching field to the list of anime the user is watching
         const ok = db.list(`users/${WatchingPage.prototype.username}/watching`, ref => ref.limitToFirst(100).orderByKey())
         ok.valueChanges().subscribe(data => (WatchingPage.prototype.watching = data))
-
+        // Sets watchingOptions field to the list of anime the user is watching but with key outer layer
         const ok2 = db.list(`users/${WatchingPage.prototype.username}/watching`, ref => ref.limitToFirst(100).orderByKey())
         ok2.snapshotChanges().subscribe(data => (WatchingPage.prototype.watchingOptions = data))
         
@@ -58,18 +66,6 @@ export class WatchingPage implements OnInit {
      }
 
   ngOnInit() {
-  }
-
-  getWatching(){
-
-    // Sets watching field to the list of anime the user is watching
-    const ok = this.db.list(`users/${this.username}/watching`, ref => ref.limitToFirst(100).orderByKey())
-    ok.valueChanges().subscribe(data => (this.watching = data))
-
-    // Sets watchingOptions field to the list of anime the user is watching but with key outer layer
-    const ok2 = this.db.list(`users/${this.username}/watching`, ref => ref.limitToFirst(100).orderByKey())
-    ok2.snapshotChanges().subscribe(data => (this.watchingOptions = data))
-
   }
 
  async options(ev:any, anime:any, pos:any){
