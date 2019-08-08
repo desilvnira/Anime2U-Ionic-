@@ -24,6 +24,15 @@ export class CompletedPage implements OnInit {
   itemRef: AngularFireObject<any>;
   item: Observable<any>;
 
+  /**
+   * Uses af auth in order to get currently authenticated user
+   * Uses this user in order to extract data regarding the watching category from database
+   * Have to use a promise due to delay taken to authenticate
+   * @param router 
+   * @param afAuth 
+   * @param db 
+   * @param alert 
+   */
   constructor(public router: Router,
     public afAuth: AngularFireAuth,
     public db: AngularFireDatabase,
@@ -45,9 +54,10 @@ export class CompletedPage implements OnInit {
         
       })})
       promise1.then(function (value){
+        // Sets watching field to the list of anime the user is watching
         const ok = db.list(`users/${CompletedPage.prototype.username}/completed`, ref => ref.limitToFirst(100).orderByKey())
         ok.valueChanges().subscribe(data => (CompletedPage.prototype.completed = data))
-
+         // Sets watchingOptions field to the list of anime the user is watching but with key outer layer
         const ok2 = db.list(`users/${CompletedPage.prototype.username}/completed`, ref => ref.limitToFirst(100).orderByKey())
         ok2.snapshotChanges().subscribe(data => (CompletedPage.prototype.completedOptions = data))
         
@@ -58,20 +68,14 @@ export class CompletedPage implements OnInit {
   ngOnInit() {
   }
 
-  getCompleted(){
-    const ok = this.db.list(`users/${this.username}/completed`, ref => ref.limitToFirst(100).orderByKey())
-    ok.valueChanges().subscribe(data => (this.completed = data))
-
-    const ok2 = this.db.list(`users/${this.username}/completed`, ref => ref.limitToFirst(100).orderByKey())
-    ok2.snapshotChanges().subscribe(data => (this.completedOptions = data))
-  }
-
   async options(ev:any, anime:any, pos:any){
 
+    // Removes the anime from the database and page
     if(ev.detail.value === "remove"){      
       this.db.list(`users/${this.username}/completed/${this.completedOptions[pos].key}`).remove()
     }
 
+    //Pushes the anime to the watching page whilst removing it from current page
     if(ev.detail.value === "watching"){
       this.db.list(`users/${this.username}/watching`).push({
         anime: anime.anime
@@ -79,6 +83,7 @@ export class CompletedPage implements OnInit {
       this.db.list(`users/${this.username}/completed/${this.completedOptions[pos].key}`).remove()
     }
 
+    //Pushes the anime to the yetToWatch page whilst removing it from current page
     if(ev.detail.value === "yetToWatch"){      
       this.db.list(`users/${this.username}/yetToWatch`).push({
         anime: anime.anime
@@ -86,6 +91,7 @@ export class CompletedPage implements OnInit {
       this.db.list(`users/${this.username}/completed/${this.completedOptions[pos].key}`).remove()
     }
 
+    //Pushes the anime to the top 10 page without removing it from current page
     if(ev.detail.value === "top10"){ 
       const ok = this.db.list(`users/${CompletedPage.prototype.username}/top10`, ref => ref.limitToFirst(100).orderByKey())
       ok.valueChanges().subscribe(data => (CompletedPage.prototype.top10Limit = data.length))
@@ -99,14 +105,17 @@ export class CompletedPage implements OnInit {
         })     
         await al.present()
         return; 
-      }      
+      } 
+      // Pushes the anime to the top 10 page      
       this.db.list(`users/${this.username}/top10`).push({
         anime: anime.anime
       })      
     }
 
   }
-
+  /**
+   * Navigates the user back to the profile page
+   */
   goBack(){
     this.router.navigate(['/tabs/profile'])
   }
