@@ -62,9 +62,11 @@ export class WatchingPage implements OnInit {
 
   getWatching(){
 
+    // Sets watching field to the list of anime the user is watching
     const ok = this.db.list(`users/${this.username}/watching`, ref => ref.limitToFirst(100).orderByKey())
     ok.valueChanges().subscribe(data => (this.watching = data))
 
+    // Sets watchingOptions field to the list of anime the user is watching but with key outer layer
     const ok2 = this.db.list(`users/${this.username}/watching`, ref => ref.limitToFirst(100).orderByKey())
     ok2.snapshotChanges().subscribe(data => (this.watchingOptions = data))
 
@@ -72,9 +74,13 @@ export class WatchingPage implements OnInit {
 
  async options(ev:any, anime:any, pos:any){
 
+    // Removes anime from database based on key 
+
     if(ev.detail.value === "remove"){      
       this.db.list(`users/${this.username}/watching/${this.watchingOptions[pos].key}`).remove()
     }
+
+    // Pushes the anime selected to the completed page whilst deleting from current
 
     if(ev.detail.value === "completed"){
       this.db.list(`users/${this.username}/completed`).push({
@@ -83,12 +89,16 @@ export class WatchingPage implements OnInit {
       this.db.list(`users/${this.username}/watching/${this.watchingOptions[pos].key}`).remove()
     }
 
+    // Pushes the anime selected to the yetToWatch page whilst deleting from current
+
     if(ev.detail.value === "yetToWatch"){      
       this.db.list(`users/${this.username}/yetToWatch`).push({
         anime: anime.anime
       })      
       this.db.list(`users/${this.username}/watching/${this.watchingOptions[pos].key}`).remove()
     }
+
+    // Pushes the anime selected to the top 10 page without deleting from current
 
     if(ev.detail.value === "top10"){
       const ok = this.db.list(`users/${WatchingPage.prototype.username}/top10`, ref => ref.limitToFirst(100).orderByKey())
@@ -111,10 +121,19 @@ export class WatchingPage implements OnInit {
 
   }
 
+  /**
+   * Handles the extraction of data from database in order to update the current ep
+   * and next episode card details.
+   * @param ev 
+   * @param pos 
+   * @param anime 
+   */
+
   async getEp(ev: any, pos: any, anime: any){
 
     console.log(anime.anime.episodes)
     console.log(ev.target.value)
+    // alerts for invalid user inputs
     if(ev.target.value > anime.anime.episodes || ev.target.value <= 0){
       var message: string
       message = "Episode number out of bounds"
@@ -139,17 +158,15 @@ export class WatchingPage implements OnInit {
     var self = this
     var epNum: any
     var epLimitCheck: any
+    // small function to deal with animes with over 100 episodes where further pages are required
+    // to be accessed in order to display high episode numbers
     if(Math.floor(ev.target.value / 100) === 0){
       epLimitCheck = 1
       epNum = ev.target.value
     }else{
       epLimitCheck = Math.floor(ev.target.value / 100) + 1
       epNum = ev.target.value - ((Math.floor(ev.target.value / 100))*100) 
-      if(ev.target.value.includes("99")){
-        console.log("here")
-      }
     }
-    console.log(epLimitCheck)
 
       fetch('https://api.jikan.moe/v3/anime/'+anime.anime.mal_id+'/episodes/' + epLimitCheck)
       .then(function(response) {
@@ -157,13 +174,20 @@ export class WatchingPage implements OnInit {
       })
       .then(function(myJson) {
         console.log(myJson)
+        // updates the current episode and next episode fields in database
+        // uses the position passed through thr function to access the correct key
+        // in the dataase as keys are unordered
         self.db.object(`users/${self.username}/watching/${self.watchingOptions[pos].key}`).
       update({
         currentEpisode: ev.target.value,
-        nextEpisode: myJson.episodes[parseInt(epNum)].title
+        nextEpisode: myJson.episodes[parseInt(epNum)]
       });
         });
   }
+
+  /**
+   * Navigates back to the profile page
+   */
 
   goBack(){
     this.router.navigate(['/tabs/profile'])
