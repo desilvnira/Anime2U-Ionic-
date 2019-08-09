@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth'
 import { Observable } from 'rxjs';
+import { ToastController } from '@ionic/angular';
 
 
 @Component({
@@ -31,8 +32,9 @@ export class Top10Page implements OnInit {
    */
   constructor(public router: Router,
     public afAuth: AngularFireAuth,
-    public db:
-    AngularFireDatabase) {
+    public db: AngularFireDatabase,
+    public toastCtrl: ToastController
+    ) {
 
       this.itemRef = db.object('users');
       this.item = this.itemRef.valueChanges();
@@ -70,7 +72,7 @@ export class Top10Page implements OnInit {
    */
   options(ev:any, anime:any, pos:any){
     if(ev.detail.value === "remove"){      
-      console.log(anime)
+      this.presentToast(anime.anime.title + ' has been removed from Top 10') 
       this.db.list(`users/${this.username}/top10/${this.top10Options[pos].key}`).remove()
     }
   }
@@ -79,6 +81,17 @@ export class Top10Page implements OnInit {
     this.router.navigate(['/tabs/profile'])
   }
   
-
+  /**
+   * Gives notification about recent change to page through message param
+   * @param message 
+   */
+  async presentToast(message: any) {
+    const toast = await this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: "top"
+    });
+    await toast.present();
+  }
   
 }

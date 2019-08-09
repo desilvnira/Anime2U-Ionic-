@@ -47,10 +47,8 @@
                             
                         </ion-item>
                         <ion-card *ngIf="anime.nextEpisode !== undefined">
-                            <ion-card-header>
-                              Title: {{anime.nextEpisode.title}}
-                            </ion-card-header>
                             <ion-card-content>
+                              <p>Title: {{anime.nextEpisode.title}}</p>
                               <p>Japenese: {{anime.nextEpisode.title_japanese}}</p>
                               <p>Filler: {{anime.nextEpisode.filler}}</p>
                               <p>Recap: {{anime.nextEpisode.recap}}</p>

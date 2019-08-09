@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth'
 import { Observable } from 'rxjs';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 
 
 @Component({
@@ -35,7 +35,8 @@ export class YetToWatchPage implements OnInit {
   constructor(public router: Router,
     public afAuth: AngularFireAuth,
     public db: AngularFireDatabase,
-    public alert: AlertController
+    public alert: AlertController,
+    public toastCtrl: ToastController
     ) {
 
       this.itemRef = db.object('users');
@@ -77,7 +78,8 @@ export class YetToWatchPage implements OnInit {
    */
   async options(ev:any, anime:any, pos:any){
     // Remove anime from the database and from the current page
-    if(ev.detail.value === "remove"){      
+    if(ev.detail.value === "remove"){  
+      this.presentToast(anime.anime.title + ' has been removed from Yet to watch')       
       this.db.list(`users/${this.username}/yetToWatch/${this.yetToWatchOptions[pos].key}`).remove()
     }
 
@@ -123,6 +125,15 @@ export class YetToWatchPage implements OnInit {
  */
 goBack(){
   this.router.navigate(['/tabs/profile'])
+}
+
+async presentToast(message: any) {
+  const toast = await this.toastCtrl.create({
+    message: message,
+    duration: 3000,
+    position: "top"
+  });
+  await toast.present();
 }
   
 

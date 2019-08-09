@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth'
 import { Observable } from 'rxjs';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
+
+
 
 @Component({
   selector: 'app-watching',
@@ -38,6 +40,7 @@ export class WatchingPage implements OnInit {
     public afAuth: AngularFireAuth,
     public db: AngularFireDatabase,
     public alert: AlertController,
+    public toastCtrl: ToastController
     ) {
 
       this.itemRef = db.object('users');
@@ -81,7 +84,8 @@ export class WatchingPage implements OnInit {
 
     // Removes anime from database based on key 
 
-    if(ev.detail.value === "remove"){      
+    if(ev.detail.value === "remove"){
+      this.presentToast(anime.anime.title + ' was removed from watching')      
       this.db.list(`users/${this.username}/watching/${this.watchingOptions[pos].key}`).remove()
     }
 
@@ -197,7 +201,15 @@ export class WatchingPage implements OnInit {
   goBack(){
     this.router.navigate(['/tabs/profile'])
   }
-  
 
+  async presentToast(message: any) {
+    const toast = await this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: "top"
+    });
+    await toast.present();
+  
+  }
   
 }

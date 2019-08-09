@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth'
 import { Observable, Subject } from 'rxjs';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 
 
 
@@ -36,7 +36,8 @@ export class CompletedPage implements OnInit {
   constructor(public router: Router,
     public afAuth: AngularFireAuth,
     public db: AngularFireDatabase,
-    public alert: AlertController
+    public alert: AlertController,
+    public toastCtrl: ToastController
     ){
 
       this.itemRef = db.object('users');
@@ -79,7 +80,8 @@ export class CompletedPage implements OnInit {
   async options(ev:any, anime:any, pos:any){
 
     // Removes the anime from the database and page
-    if(ev.detail.value === "remove"){      
+    if(ev.detail.value === "remove"){
+      this.presentToast(anime.anime.title + ' has been removed from completed')      
       this.db.list(`users/${this.username}/completed/${this.completedOptions[pos].key}`).remove()
     }
 
@@ -126,6 +128,15 @@ export class CompletedPage implements OnInit {
    */
   goBack(){
     this.router.navigate(['/tabs/profile'])
+  }
+
+  async presentToast(message: any) {
+    const toast = await this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: "top"
+    });
+    await toast.present();
   }
   
 
