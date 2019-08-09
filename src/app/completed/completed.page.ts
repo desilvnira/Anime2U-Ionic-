@@ -87,6 +87,7 @@ export class CompletedPage implements OnInit {
 
     //Pushes the anime to the watching page whilst removing it from current page
     if(ev.detail.value === "watching"){
+      this.presentToast(anime.anime.title + ' has been moved to watching')
       this.db.list(`users/${this.username}/watching`).push({
         anime: anime.anime
       })      
@@ -94,7 +95,8 @@ export class CompletedPage implements OnInit {
     }
 
     //Pushes the anime to the yetToWatch page whilst removing it from current page
-    if(ev.detail.value === "yetToWatch"){      
+    if(ev.detail.value === "yetToWatch"){
+      this.presentToast(anime.anime.title + ' has been moved to Yet to Watch')      
       this.db.list(`users/${this.username}/yetToWatch`).push({
         anime: anime.anime
       })      
@@ -116,6 +118,7 @@ export class CompletedPage implements OnInit {
         await al.present()
         return; 
       } 
+      this.presentToast(anime.anime.title + ' has been added to Top 10')
       // Pushes the anime to the top 10 page      
       this.db.list(`users/${this.username}/top10`).push({
         anime: anime.anime
