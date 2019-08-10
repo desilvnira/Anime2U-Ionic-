@@ -69,4 +69,8 @@ export class LoginPage implements OnInit {
 
     await alert.present()
   }
+
+  goHome(){
+    this.router.navigate(['/home'])
+  }
 }

@@ -141,29 +141,17 @@ export class WatchingPage implements OnInit {
    * @param anime 
    */
 
-  async getEp(ev: any, pos: any, anime: any){
+  getEp(ev: any, pos: any, anime: any){
 
     console.log(anime.anime.episodes)
     console.log(ev.target.value)
     // alerts for invalid user inputs
     if(ev.target.value > anime.anime.episodes || ev.target.value <= 0){
-      var message: string
-      message = "Episode number out of bounds"
-      const al = await this.alert.create({
-        message,
-        buttons: ["Ok"]
-      })     
-      await al.present()
+      this.doAlert("Episode number out of bounds")
       return;
     }
     if(isNaN(ev.target.value)){
-      var message: string
-      message = "Episode number is not valid"
-      const al = await this.alert.create({
-        message,
-        buttons: ["Ok"]
-      })     
-      await al.present()
+     this.doAlert("Episode number is not valid")
       return;
     }
 
@@ -189,6 +177,11 @@ export class WatchingPage implements OnInit {
         // updates the current episode and next episode fields in database
         // uses the position passed through thr function to access the correct key
         // in the dataase as keys are unordered
+        console.log(myJson.episodes[parseInt(epNum)])
+        if(myJson.episodes[parseInt(epNum)] === undefined){
+          self.doAlert("Episode details not currently available")
+          return
+        }
         self.db.object(`users/${self.username}/watching/${self.watchingOptions[pos].key}`).
       update({
         currentEpisode: ev.target.value,
@@ -213,6 +206,14 @@ export class WatchingPage implements OnInit {
     });
     await toast.present();
   
+  }
+
+  async doAlert(message: any){
+    const al = await this.alert.create({
+      message,
+      buttons: ["Ok"]
+    })     
+    await al.present()
   }
   
 }

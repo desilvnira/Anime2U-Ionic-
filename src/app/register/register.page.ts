@@ -42,9 +42,19 @@ export class RegisterPage implements OnInit {
 
   async doRegister(){
     const{username, password, cpassword, favAnime, picURL} = this
+    // Checks whether passwords match
     if(password !== cpassword){
       this.doAlert("Passwords do not match!")
       return console.error("Password does not match")
+    }
+    //Checks whether there is uppercase characters in username
+    var i = 0
+    while(i < username.length){
+      if(username.charAt(i) == username.charAt(i).toUpperCase()){
+        this.doAlert("Only lowercase characters allowed for username")
+        return 
+      }
+      i++;
     }
     try{
       const result = await this.afAuth.auth.createUserWithEmailAndPassword(username + '@niran.com', password)
@@ -80,5 +90,9 @@ export class RegisterPage implements OnInit {
     })
 
     await alert.present()
+  }
+
+  goHome(){
+    this.router.navigate(['/home'])
   }
 }
