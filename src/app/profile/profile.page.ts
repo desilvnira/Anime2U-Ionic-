@@ -103,23 +103,12 @@ export class ProfilePage implements OnInit {
   }
 
   /**
-   * Need to figure out a way to make this work, currently having issues 
-   * with the HTML loading after the user has been logged.
-   * Could leave this out.
+   * Signs the user of the app and reloads the local storage for next user
    */
-
-  async logout(){
-    // this.router.navigate(['/home'])
-    // await this.afAuth.auth.signOut().then(function() {
-    //   // Sign-out successful.
-    //   this.router.navigate(['/home'])
-    //   location.reload()
-      
-    
-    // }, function(error) {
-    //   console.log("Error logging out")
-    // });
-    
+  async logout() {
+    await this.afAuth.auth.signOut();
+    location.replace(window.location.href.replace("tabs/profile", 
+    "home"))
     
   }
 

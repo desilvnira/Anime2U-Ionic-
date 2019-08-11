@@ -8,16 +8,23 @@ import { Router } from '@angular/router';
 })
 export class HomePage implements OnInit {
 
-  constructor(public router: Router) { }
+  constructor(public router: Router) {
+    
+   }
 
   ngOnInit() {
+    
   }
 
   login(){
+    
     this.router.navigate(['/login'])
+    
+    
   }
 
   register(){
+    
     this.router.navigate(['/register'])
   }
 
