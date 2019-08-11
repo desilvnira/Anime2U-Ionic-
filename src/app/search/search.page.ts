@@ -52,7 +52,6 @@ export class SearchPage implements OnInit {
       this.afAuth.auth.onAuthStateChanged(function(user) {
         
         if (user) {
-          console.log("Username here is: " + user.email.split("@niran.com")[0])
           SearchPage.prototype.username = user.email.split("@niran.com")[0]
           return "lol"
         } else {
@@ -89,7 +88,6 @@ export class SearchPage implements OnInit {
       })
       .then(function(myJson) {
         self.data = myJson.results
-        console.log(myJson.results)
       });
 
     //if the value is an empty string don't filter the items

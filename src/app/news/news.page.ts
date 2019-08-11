@@ -29,7 +29,6 @@ export class NewsPage implements OnInit {
       })
       .then(function(myJson) {
         self.data = myJson.top
-        console.log(myJson.top)
       });
     
   }
@@ -51,7 +50,6 @@ export class NewsPage implements OnInit {
       })
       .then(function(myJson) {
         self.data = myJson.top
-        console.log(myJson.top)
       });
     }
 
@@ -63,7 +61,6 @@ export class NewsPage implements OnInit {
       })
       .then(function(myJson) {
         self.data = myJson.top
-        console.log(myJson.top)
       });
     }
 
@@ -75,7 +72,6 @@ export class NewsPage implements OnInit {
       })
       .then(function(myJson) {
         self.data = myJson.top
-        console.log(myJson.top)
       });
     }
   }

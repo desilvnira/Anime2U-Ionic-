@@ -36,12 +36,9 @@ export class ProfilePage implements OnInit {
     ) {
       this.itemRef = db.object('item');
       this.item = this.itemRef.valueChanges();
-
-      var promise1 = new Promise(function (resolve, reject,) {afAuth.auth.onAuthStateChanged(function(user) {
-       
+      var promise1 = new Promise(function (resolve, reject,) {afAuth.auth.onAuthStateChanged(function(user) {       
       //Grabs the user of the current page and sends it to username field
       if (user) {
-        console.log("Username here is: " + user.email.split("@niran.com")[0])
         ProfilePage.prototype.username = user.email.split("@niran.com")[0]
         
       } else {
