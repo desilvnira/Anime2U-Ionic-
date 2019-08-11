@@ -31,6 +31,15 @@ export class SearchPage implements OnInit {
 
   data: any;
   searchQuery: string = '';
+  /**
+   * Grabs the username of the curently logged in user and lets them search from anime that 
+   * they can choose to add to their anime lists stored in the database for later use.
+   * @param router 
+   * @param afAuth 
+   * @param events 
+   * @param db 
+   * @param alert 
+   */
   constructor(public router: Router,
     public afAuth: AngularFireAuth,
     public events: Events,
@@ -38,12 +47,8 @@ export class SearchPage implements OnInit {
     AngularFireDatabase,
     public alert: AlertController,
     ) {
-
-
       this.itemRef = db.object('users');
       this.item = this.itemRef.valueChanges();
-      
-
       this.afAuth.auth.onAuthStateChanged(function(user) {
         
         if (user) {
@@ -62,6 +67,12 @@ export class SearchPage implements OnInit {
   }
 
 
+  /**
+   * Dynamically updates the serach output at each keypress by retrieving the seach event HTML side.
+   * This function then calls the api and fetches data related the to string that is formed at 
+   * each keypress, resulting in anime being being shown to the user.
+   * @param ev 
+   */
   getItems(ev: any) {
     // Reset items back to all of the items
     

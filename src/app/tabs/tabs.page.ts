@@ -11,6 +11,9 @@ export class TabsPage implements OnInit {
   @ViewChild('tabs') tabs: IonTabs
   constructor() { }
 
+  /**
+   * On init the user sees the news page and not the blank tabs page.
+   */
   ngOnInit() {
     this.tabs.select('news')
   }

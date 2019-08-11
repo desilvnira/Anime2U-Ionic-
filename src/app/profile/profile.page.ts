@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { resolve } from 'q';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -30,9 +30,10 @@ export class ProfilePage implements OnInit {
    * to global fields in order to display in html component.
    */
   constructor(public router: Router,
-    public db:
-    AngularFireDatabase,
-    public afAuth: AngularFireAuth,) {
+    public db: AngularFireDatabase,
+    public afAuth: AngularFireAuth,
+    public alert: AlertController
+    ) {
       this.itemRef = db.object('item');
       this.item = this.itemRef.valueChanges();
 
@@ -49,6 +50,8 @@ export class ProfilePage implements OnInit {
       resolve(user.email.split("@niran.com")[0])
      
     })})
+    // Once username has been resolved relevant user data is retrieved in order to be displayed
+    // on thr html side from the subsrbed data types below
     promise1.then(function (value){
       const record1 = db.object(`users/${ProfilePage.prototype.username}/favouriteAnime`)
       record1.valueChanges().subscribe(data => ProfilePage.prototype.favAnime = data)
@@ -106,10 +109,26 @@ export class ProfilePage implements OnInit {
    * Signs the user of the app and reloads the local storage for next user
    */
   async logout() {
-    await this.afAuth.auth.signOut();
-    location.replace(window.location.href.replace("tabs/profile", 
-    "home"))
     
+    var message = "Are you sure you want to logout?"
+    const al = await this.alert.create({
+      message,
+      buttons: [
+        {
+          text: 'Yes',
+          handler: async() => {
+            await this.afAuth.auth.signOut();
+            location.replace(window.location.href.replace("tabs/profile","home"))
+          }
+        },
+        {
+          text: 'No',
+          handler: () => {
+            // do nothing
+          }
+        }
+      ]
+    })     
+    await al.present()   
   }
-
 }

@@ -1,8 +1,9 @@
-import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
-
+import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 import { NgModule } from '@angular/core';
 
+// Provides routing functionality which calls the specific paths of the tab that is selected and 
+// diplays the relevant data at the page.
 const routes: Routes = [
     {
         path: '',
