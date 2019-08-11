@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth'
-import { auth } from 'firebase/app'
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angular/fire/database';
@@ -25,6 +24,15 @@ export class LoginPage implements OnInit {
   
   username: string = ""
   password: string = ""
+
+  /**
+   * Sets up angular firebase authentication to login the user.
+   * @param afAuth 
+   * @param router 
+   * @param alert 
+   * @param db 
+   * @param events 
+   */
   constructor(public afAuth:
      AngularFireAuth,
      public router: Router, 
@@ -35,32 +43,42 @@ export class LoginPage implements OnInit {
      ) {
 
       this.itemRef = db.object('users');
-    this.item = this.itemRef.valueChanges();
+      this.item = this.itemRef.valueChanges();
 
    }
 
   ngOnInit() {
   }
 
+  /**
+   * Logs the user in using username and password
+   * User is logged in if the username and password is a contained pair in firebase auth
+   * Once successfully logged in the user is navigated into tabs which allows them to use the app
+   */
   async login(){
     const {username, password} = this
-    try{
-      
-      
-      const result = await this.afAuth.auth.signInWithEmailAndPassword(username + '@niran.com', password)
-            
+    try{    
+      const result = await this.afAuth.auth.signInWithEmailAndPassword(username + '@niran.com', password)           
       this.userId = result.user.uid
       console.log("UserID: " + this.userId)
-
       this.router.navigate(['/tabs'])
     }catch(err){
       console.dir(err)
       if(err.code === "auth/user-not-found"){
         this.doAlert("Error: User not found")
       }
+      if(err.code === "auth/wrong-password"){
+        this.doAlert("Error: Password is incorrect")
+      }
     }
   }
 
+  /**
+   * An alert is presented using the string passed in from login function.
+   * Used for cases where username and password do not match or when the user is not contained within 
+   * the database.
+   * @param message 
+   */
   async doAlert(message: string){
     const alert = await this.alert.create({
       message,
@@ -70,6 +88,9 @@ export class LoginPage implements OnInit {
     await alert.present()
   }
 
+  /**
+   * Clicking the logo navigates the user back to the home screen
+   */
   goHome(){
     this.router.navigate(['/home'])
   }
