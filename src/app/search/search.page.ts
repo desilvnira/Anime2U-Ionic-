@@ -161,16 +161,9 @@ export class SearchPage implements OnInit {
     // Pushes anime to the dblist of watching
     this.watching = this.db.list(`users/${this.username}/top10`)
     this.watching.push({anime: anime})
-  }
-  if(ev.detail.value === "testing"){
-    this.db.list(`users/${this.username}/watching`)
-    .valueChanges()
-    .subscribe(res => {
-        console.log(res[0])//should give you the array of percentage. 
-    })
-    
+  }   
 
-  }
+  
 
 
   }

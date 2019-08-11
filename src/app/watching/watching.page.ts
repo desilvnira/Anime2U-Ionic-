@@ -143,8 +143,6 @@ export class WatchingPage implements OnInit {
 
   getEp(ev: any, pos: any, anime: any){
 
-    console.log(anime.anime.episodes)
-    console.log(ev.target.value)
     // alerts for invalid user inputs
     if(ev.target.value > anime.anime.episodes || ev.target.value <= 0){
       this.doAlert("Episode number out of bounds")
@@ -173,11 +171,10 @@ export class WatchingPage implements OnInit {
         return response.json();
       })
       .then(function(myJson) {
-        console.log(myJson)
         // updates the current episode and next episode fields in database
         // uses the position passed through thr function to access the correct key
         // in the dataase as keys are unordered
-        console.log(myJson.episodes[parseInt(epNum)])
+        // console.log(myJson.episodes[parseInt(epNum)])
         if(myJson.episodes[parseInt(epNum)] === undefined){
           self.doAlert("Episode details not currently available")
           return
